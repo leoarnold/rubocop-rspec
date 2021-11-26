@@ -51,67 +51,6 @@ count { 1 }
 
 * https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/AttributeDefinedStatically
 
-== RSpec/FactoryBot/CreateList
-
-|===
-| Enabled by default | Safe | Supports autocorrection | Version Added | Version Changed
-
-| Enabled
-| Yes
-| Yes
-| 1.25
-| 2.0
-|===
-
-Checks for create_list usage.
-
-This cop can be configured using the `EnforcedStyle` option
-
-=== Examples
-
-==== `EnforcedStyle: create_list`
-
-[source,ruby]
-----
-# bad
-3.times { create :user }
-
-# good
-create_list :user, 3
-
-# good
-3.times { |n| create :user, created_at: n.months.ago }
-----
-
-==== `EnforcedStyle: n_times`
-
-[source,ruby]
-----
-# bad
-create_list :user, 3
-
-# good
-3.times { create :user }
-----
-
-=== Configurable attributes
-
-|===
-| Name | Default value | Configurable values
-
-| Include
-| `+**/*_spec.rb+`, `+**/spec/**/*+`, `spec/factories.rb`, `spec/factories/**/*.rb`, `features/support/factories/**/*.rb`
-| Array
-
-| EnforcedStyle
-| `create_list`
-| `create_list`, `n_times`
-|===
-
-=== References
-
-* https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/CreateList
-
 == RSpec/FactoryBot/FactoryClassName
 
 |===
@@ -157,6 +96,107 @@ end
 === References
 
 * https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/FactoryClassName
+
+== RSpec/FactoryBot/MultipleInstances
+
+|===
+| Enabled by default | Safe | Supports autocorrection | Version Added | Version Changed
+
+| Enabled
+| Yes
+| Yes
+| 1.25
+| <<next>>
+|===
+
+Checks for create_list usage.
+
+This cop can be configured using the `EnforcedStyle` option
+
+=== Examples
+
+==== `EnforcedStyle: list` (default)
+
+[source,ruby]
+----
+# bad
+build_pair(:user)
+3.times { build(:user) }
+3.times { |n| create(:user, created_at: n.months.ago) }
+create_pair(:user) do |user, n|
+  user.created_at = n.months.ago
+end
+
+# good
+build_list(:user, 2)
+build_list(:user, 3)
+create_list(:user, 3) do |user, n|
+  user.created_at = n.months.ago
+end
+create_list(:user, 2) do |user, n|
+  user.created_at = n.months.ago
+end
+----
+
+==== `EnforcedStyle: list_and_pair`
+
+[source,ruby]
+----
+# bad
+2.times { build(:user) }
+3.times { build(:user) }
+2.times { |n| create(:user, created_at: n.months.ago) }
+3.times { |n| create(:user, created_at: n.months.ago) }
+
+# good
+build_pair(:user)
+build_list(:user, 3)
+create_pair(:user) do |user, n|
+  user.created_at = n.months.ago
+end
+create_list(:user, 3) do |user, n|
+  user.created_at = n.months.ago
+end
+----
+
+==== `EnforcedStyle: n_times`
+
+[source,ruby]
+----
+# bad
+build_pair(:user)
+build_list(:user, 3)
+create_pair(:user) do |user, n|
+  user.created_at = n.months.ago
+end
+create_list(:user, 3) do |user, n|
+  user.created_at = n.months.ago
+end
+
+# good
+2.times { build(:user) }
+3.times { build(:user) }
+2.times { |n| create_pair(:user, user.created_at = n.months.ago) }
+3.times { |n| create_pair(:user, user.created_at = n.months.ago) }
+----
+
+=== Configurable attributes
+
+|===
+| Name | Default value | Configurable values
+
+| Include
+| `+**/*_spec.rb+`, `+**/spec/**/*+`, `spec/factories.rb`, `spec/factories/**/*.rb`, `features/support/factories/**/*.rb`
+| Array
+
+| EnforcedStyle
+| `list`
+| `list`, `list_and_pair`, `n_times`
+|===
+
+=== References
+
+* https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/MultipleInstances
 
 == RSpec/FactoryBot/SyntaxMethods
 

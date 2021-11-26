@@ -8,30 +8,67 @@ module RuboCop
         #
         # This cop can be configured using the `EnforcedStyle` option
         #
-        # @example `EnforcedStyle: create_list`
+        # @example `EnforcedStyle: list` (default)
         #   # bad
-        #   3.times { create :user }
+        #   build_pair(:user)
+        #   3.times { build(:user) }
+        #   3.times { |n| create(:user, created_at: n.months.ago) }
+        #   create_pair(:user) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
         #
         #   # good
-        #   create_list :user, 3
+        #   build_list(:user, 2)
+        #   build_list(:user, 3)
+        #   create_list(:user, 3) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
+        #   create_list(:user, 2) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
+        #
+        # @example `EnforcedStyle: list_and_pair`
+        #   # bad
+        #   2.times { build(:user) }
+        #   3.times { build(:user) }
+        #   2.times { |n| create(:user, created_at: n.months.ago) }
+        #   3.times { |n| create(:user, created_at: n.months.ago) }
         #
         #   # good
-        #   3.times { |n| create :user, created_at: n.months.ago }
+        #   build_pair(:user)
+        #   build_list(:user, 3)
+        #   create_pair(:user) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
+        #   create_list(:user, 3) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
         #
         # @example `EnforcedStyle: n_times`
         #   # bad
-        #   create_list :user, 3
+        #   build_pair(:user)
+        #   build_list(:user, 3)
+        #   create_pair(:user) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
+        #   create_list(:user, 3) do |user, n|
+        #     user.created_at = n.months.ago
+        #   end
         #
         #   # good
-        #   3.times { create :user }
-        class CreateList < Base
+        #   2.times { build(:user) }
+        #   3.times { build(:user) }
+        #   2.times { |n| create_pair(:user, user.created_at = n.months.ago) }
+        #   3.times { |n| create_pair(:user, user.created_at = n.months.ago) }
+        #
+        class MultipleInstances < Base
           extend AutoCorrector
           include ConfigurableEnforcedStyle
           include RuboCop::RSpec::FactoryBot::Language
 
           MSG_CREATE_LIST = 'Prefer create_list.'
           MSG_N_TIMES = 'Prefer %<number>s.times.'
-          RESTRICT_ON_SEND = %i[create_list].freeze
+          RESTRICT_ON_SEND = SYNTAX_METHODS
 
           # @!method n_times_block_without_arg?(node)
           def_node_matcher :n_times_block_without_arg?, <<-PATTERN
@@ -53,7 +90,7 @@ module RuboCop
           PATTERN
 
           def on_block(node)
-            return unless style == :create_list
+            return unless style == :list
             return unless n_times_block_without_arg?(node)
             return unless contains_only_factory?(node.body)
 

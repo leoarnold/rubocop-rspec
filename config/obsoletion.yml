@@ -1,0 +1,16 @@
+#
+# Configuration for obsoletion.
+#
+# See: https://docs.rubocop.org/rubocop/extensions.html#config-obsoletions
+#
+
+# Cops that were renamed
+renamed:
+  RSpec/FactoryBot/CreateList: RSpec/FactoryBot/MultipleInstances
+
+# Enforced styles that have been removed or replaced
+changed_enforced_styles:
+  - cops: RSpec/FactoryBot/MultipleInstances
+    parameters: EnforcedStyle
+    value: create_list
+    alternative: list

@@ -2,6 +2,7 @@
 
 ## Master (Unreleased)
 
+* [#1217](https://github.com/rubocop/rubocop-rails/pull/1217): Rename `R/F/CreateList` to `R/F/MultipleInstances` and extend it. ([@leoarnold][])
 * [#1215](https://github.com/rubocop/rubocop-rails/pull/1215): Add new `RSpec/FactoryBot/SyntaxMethods` cop. ([@leoarnold][])
 
 ## 2.6.0 (2021-11-08)

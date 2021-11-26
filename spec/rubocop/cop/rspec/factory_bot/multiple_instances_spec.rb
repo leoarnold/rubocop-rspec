@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe RuboCop::Cop::RSpec::FactoryBot::CreateList do
+RSpec.describe RuboCop::Cop::RSpec::FactoryBot::MultipleInstances do
   let(:cop_config) do
     { 'EnforcedStyle' => enforced_style }
   end
 
-  context 'when EnforcedStyle is :create_list' do
-    let(:enforced_style) { :create_list }
+  context 'when EnforcedStyle is :list' do
+    let(:enforced_style) { :list }
 
     it 'flags usage of n.times with no arguments' do
       expect_offense(<<~RUBY)

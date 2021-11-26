@@ -788,7 +788,7 @@ RSpec/FactoryBot/AttributeDefinedStatically:
   VersionChanged: '2.0'
   StyleGuide: https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/AttributeDefinedStatically
 
-RSpec/FactoryBot/CreateList:
+RSpec/FactoryBot/MultipleInstances:
   Description: Checks for create_list usage.
   Enabled: true
   Include:
@@ -797,13 +797,14 @@ RSpec/FactoryBot/CreateList:
     - spec/factories.rb
     - spec/factories/**/*.rb
     - features/support/factories/**/*.rb
-  EnforcedStyle: create_list
+  EnforcedStyle: list
   SupportedStyles:
-    - create_list
+    - list
+    - list_and_pair
     - n_times
   VersionAdded: '1.25'
-  VersionChanged: '2.0'
-  StyleGuide: https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/CreateList
+  VersionChanged: "<<next>>"
+  StyleGuide: https://www.rubydoc.info/gems/rubocop-rspec/RuboCop/Cop/RSpec/FactoryBot/MultipleInstances
 
 RSpec/FactoryBot/FactoryClassName:
   Description: Use string value when setting the class attribute explicitly.
